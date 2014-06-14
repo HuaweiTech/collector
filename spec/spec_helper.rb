@@ -16,6 +16,24 @@ Collector::Config.configure(
   "intervals" => {}
 )
 
+def reset_collector_config
+  Collector::Config.tsdb_host = nil
+  Collector::Config.tsdb_port = nil
+
+  Collector::Config.aws_access_key_id = nil
+  Collector::Config.aws_secret_access_key = nil
+
+  Collector::Config.datadog_api_key = nil 
+  Collector::Config.datadog_application_key = nil
+  Collector::Config.datadog_data_threshold = nil
+  Collector::Config.datadog_time_threshold_in_seconds = nil
+
+  Collector::Config.cf_metrics_api_host = nil
+
+  Collector::Config.graphite_host = nil
+  Collector::Config.graphite_port = nil
+end
+
 require "collector"
 
 
@@ -23,6 +41,10 @@ RSpec.configure do |c|
   c.before do
     allow(EventMachine).to receive(:defer).and_yield
     Collector::Handler.instance_map = {}
+  end
+
+  c.after do
+    reset_collector_config
   end
 end
 
